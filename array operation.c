@@ -1,144 +1,168 @@
-#include<stdio.h>
+#include <stdio.h>
 
+#define MAX 1000
 
+int arr[MAX];
+int size = 0;
 
-int arr[200]={54,45,50,33,34};
-int size = 5;
-
-void insert() {
-    if (size >= 200) {
-        printf("Array is full!\n");
-        return 0;
-    }
-    int pos,value,i;
-    printf("Enter insert which position: ");
-    scanf("%d", &pos);
-    printf("Enter the new value ");
-    scanf("%d", &value);
-    for (int i = size; i >= pos; i--) {
-        arr[i] = arr[i - 1];
-    }
-    arr[pos-1] = value;
-    for (i=0;i<size+1;i++)
-    {
-        printf("%d ",arr[i]);
-    }
-    printf("Data inserted successfully!");
-}
-
-void update() {
-    if (size == 0) {
-        printf("Array is empty!\n");
-        return 0;
-    }
-    int pos, value,i;
-    printf("Enter position to update: ");
-    scanf("%d", &pos);
-    printf("Enter new value: ");
-    scanf("%d", &value);
-    arr[pos] = value;
-    for (i=0;i<size+1;i++)
-    {
-        printf("%d ",arr[i+1]);
-    }
-    printf("Data updated successfully!\n");
-}
-
-void delete() {
-    if (size == 0) {
-        printf("Array is empty!\n");
-        return;
-    }
-    int pos,i;
-    printf("Enter position to delete: ");
-    scanf("%d", &pos);
-    for (i=pos-1;i<=size-2;i++)
-    {
-        arr[i]=arr[i+1];
-    }
-    arr[size-1]=0;
-    for (int i = 0; i < size; i++) {
-        printf("%d",arr[i]);
-    }
-
-    printf("Data deleted successfully!\n");
+void showMenu() {
+    printf("\n===== ARRAY OPERATIONS =====\n");
+    printf("1. Insert a value\n");
+    printf("2. Delete by position\n");
+    printf("3. Update a value\n");
+    printf("4. Display array\n");
+    printf("5. Search a value\n");
+    printf("6. Sort array\n");
+    printf("7. Exit\n");
 }
 
 void display() {
     if (size == 0) {
-        printf("Array is empty!\n");
+        printf("Array is empty.\n");
         return;
     }
-    printf("Array elements: ");
+    printf("Current array: ");
     for (int i = 0; i < size; i++) {
         printf("%d ", arr[i]);
     }
     printf("\n");
 }
 
-void search() {
-    if (size == 0) {
-        printf("Array is empty!\n");
-        return 0;
+void insert() {
+    if (size >= MAX) {
+        printf("Array is full! Cannot insert.\n");
+        return;
     }
-    int value,pos =-1,i;
+    int value;
+    printf("Enter value to insert: ");
+    scanf("%d", &value);
+    arr[size] = value;
+    size++;
+    printf("Value inserted!\n");
+}
+
+void delete() {
+    if (size == 0) {
+        printf("Array is empty.\n");
+        return;
+    }
+    int pos;
+    printf("Enter position to delete (0 to %d): ", size - 1);
+    scanf("%d", &pos);
+    if (pos < 0 || pos >= size) {
+        printf("Invalid position!\n");
+        return;
+    }
+    for (int i = pos; i < size - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    size--;
+    printf("Deleted successfully.\n");
+}
+
+void update() {
+    int pos, newUpdate;
+    printf("Enter position to update (0 to %d): ", size - 1);
+    scanf("%d", &pos);
+    if (pos < 0 || pos >= size) {
+        printf("Invalid position!\n");
+        return;
+    }
+    printf("Enter new value: ");
+    scanf("%d", &newUpdate);
+    arr[pos] = newUpdate;
+    printf("Updated successfully.\n");
+}
+
+void search() {
+    int value, found = 0;
     printf("Enter value to search: ");
     scanf("%d", &value);
     for (int i = 0; i < size; i++) {
         if (arr[i] == value) {
-            pos=i+1;
-            break;
+            printf("Value found at position %d\n", i);
+            found = 1;
         }
     }
-    if (pos==-1) {
-        printf("Value not found!\n");
-    }
-    else{
-        printf("the value is found at %d",pos);
+    if (!found) {
+        printf("Value not found in array.\n");
     }
 }
 
 void sort() {
     if (size == 0) {
-        printf("Array is empty!\n");
-        return 0;
+        printf("Array is empty.\n");
+        return;
     }
-    int i;
     for (int i = 0; i < size - 1; i++) {
-        for (int j = 0; j < size - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
+        for (int j = i + 1; j < size; j++) {
+            if (arr[i] > arr[j]) {
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
             }
         }
     }
-    printf("Array sorted successfully!\n");
-    for (i=0;i<size+1;i++)
-    {
-        printf("%d ",arr[i]);
-    }
+    printf("Array sorted successfully.\n");
 }
 
 int main() {
+    int initial;
+
+    printf("How many elements do you want to input (max 1000)? ");
+    scanf("%d", &initial);
+
+    if (initial > MAX || initial < 0) {
+        printf("Invalid size!\n");
+        return 0;
+    }
+
+    printf("Enter %d elements:\n", initial);
+    for (int i = 0; i < initial; i++) {
+        scanf("%d", &arr[i]);
+    }
+    size = initial;
+    display();
+
     int choice;
     do {
-        printf("\n1. Insert\n2. Update\n3. Delete\n4. Display\n5. Search\n6. Sort\n7. Exit\n");
-        printf("Enter operation number: ");
+        showMenu();
+        printf("Enter your choice: ");
         scanf("%d", &choice);
 
-        switch(choice) {
-            case 1: insert(); break;
-            case 2: update(); break;
-            case 3: delete(); break;
-            case 4: display(); break;
-            case 5: search(); break;
-            case 6: sort(); break;
-            case 7: printf("Exiting...\n"); break;
-            default: printf("Invalid operation!\n");
-          //  system("cls");
+        switch (choice) {
+            case 1:
+                insert();
+                display();
+                break;
+            case 2:
+                delete();
+                display();
+                break;
+            case 3:
+                update();
+                display();
+                break;
+            case 4:
+                display();
+                break;
+            case 5:
+                search();
+                display();
+                break;
+            case 6:
+                sort();
+                display();
+                break;
+            case 7:
+                printf("Excuet program. \n");
+                break;
+            default:
+                printf("Invalid choice! Please try again.\n");
         }
+
     } while (choice != 7);
 
     return 0;
 }
+
